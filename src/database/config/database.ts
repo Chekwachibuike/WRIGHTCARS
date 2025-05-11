@@ -20,13 +20,26 @@ console.log('Database Configuration:', {
 });
 
 export const sequelize = new Sequelize({
-  dialect: 'postgres',
   host: dbConfig.host,
   port: dbConfig.port,
   username: dbConfig.username,
   password: dbConfig.password,
   database: dbConfig.database,
-  logging: console.log, // Enable SQL query logging
+  dialect: 'postgres',
+  logging: false, // optional
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
+    }
+  },
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+  }
 });
+
 
 export default sequelize; 

@@ -11,7 +11,7 @@ import router from "./routes/v1";
 import deserialize from "./middleware/deserializeUser";
 
 const app = express();
-const port = process.env.PORT || 5450;
+const port = process.env.DB_PORT || 5432;
 
 // Swagger configuration
 const swaggerDefinition = {
@@ -51,7 +51,9 @@ const corsOptions = {
 app.use(express.json());
 app.use(cors(corsOptions)); // Enable CORS
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded payloads
-app.use(morgan("tiny")); // Log HTTP requests
+app.use(morgan("combined", {
+  skip: (req, res) => res.statusCode < 400 // Only log errors
+})); // Minimal request logging
 app.disable("x-powered-by"); // Hide server technology info
 
 // Swagger UI
