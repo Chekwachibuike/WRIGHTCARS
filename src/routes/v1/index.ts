@@ -9,6 +9,6 @@ const router = Router();
 router.use("/auth", authRoutes);
 router.use("/users", userRoutes);
 router.use("/2fa", twoFARoutes);
-router.use("/help-requests", helpRequestRoutes);
+// router.use("/help-requests", helpRequestRoutes);
 
 export default router;
