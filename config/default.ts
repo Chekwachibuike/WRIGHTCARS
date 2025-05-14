@@ -1,24 +1,45 @@
-export default {
-  port: process.env.PORT,
-  dbURI:
-    process.env.NODE_ENV === "development"
-      ? process.env.DB_HOST
-      : process.env.NODE_ENV === "test"
-      ? process.env.TEST
-      : process.env.DB,
-  accessTokenPrivateKey: process.env.ACCESSTOKEN,
-  refreshTokenPrivateKey: process.env.REFRESHTOKEN,
-  bucket: process.env.AWS_S3_BUCKET,
-  region: process.env.AWS_REGION,
-  access_key: process.env.AWS_ACCESS_KEY_ID,
-  secret_key: process.env.AWS_SECRET_ACCESS_KEY,
-  paystack_url: process.env.PAYSTACK_BASE_URL,
-  paystack_secret: process.env.PAYSTACK_SECRET_KEY,
-  db: {
-    host: process.env.DB_HOST || 'localhost',
-    port: parseInt(process.env.DB_PORT || '5432'),
-    username: process.env.DB_USERNAME || 'postgres',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'rightcars',
+import { Sequelize } from 'sequelize';
+import config from 'config';
+
+interface DatabaseConfig {
+  host: string;
+  port: number;
+  username: string;
+  password: string;
+  database: string;
+}
+
+const dbConfig = config.get<DatabaseConfig>('db');
+
+// Log database configuration (excluding password for security)
+console.log('Database Configuration:', {
+  host: dbConfig.host,
+  port: dbConfig.port,
+  username: dbConfig.username,
+  database: dbConfig.database,
+});
+
+export const sequelize = new Sequelize({
+  host: dbConfig.host,
+  port: dbConfig.port,
+  username: dbConfig.username,
+  password: dbConfig.password,
+  database: dbConfig.database,
+  dialect: 'postgres',
+  logging: false, // optional
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
+    }
   },
-};
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+  }
+});
+
+
+export default sequelize; 
