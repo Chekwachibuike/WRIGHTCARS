@@ -1,45 +1,12 @@
-import { Sequelize } from 'sequelize';
-import config from 'config';
-
-interface DatabaseConfig {
-  host: string;
-  port: number;
-  username: string;
-  password: string;
-  database: string;
-}
-
-const dbConfig = config.get<DatabaseConfig>('db');
-
-// Log database configuration (excluding password for security)
-console.log('Database Configuration:', {
-  host: dbConfig.host,
-  port: dbConfig.port,
-  username: dbConfig.username,
-  database: dbConfig.database,
-});
-
-export const sequelize = new Sequelize({
-  host: dbConfig.host,
-  port: dbConfig.port,
-  username: dbConfig.username,
-  password: dbConfig.password,
-  database: dbConfig.database,
-  dialect: 'postgres',
-  logging: false, // optional
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false
-    }
+export default {
+  db: {
+    host: process.env.DB_HOST || 'localhost',
+    port: parseInt(process.env.DB_PORT || '5432'),
+    username: process.env.DB_USERNAME || 'postgres',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'rightcars_db',
   },
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
+  server: {
+    port: process.env.PORT || 5432
   }
-});
-
-
-export default sequelize; 
+};

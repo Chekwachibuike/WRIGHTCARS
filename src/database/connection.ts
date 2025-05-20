@@ -1,35 +1,4 @@
-import { Sequelize } from 'sequelize';
-import config from 'config';
-import { sequelize } from './config/database';
-import User from './models/user';
-
-interface DatabaseConfig {
-  host: string;
-  port: number;
-  username: string;
-  password: string;
-  database: string;
-}
-
-const dbConfig = config.get<DatabaseConfig>('db');
-
-// Log database configuration (excluding password for security)
-console.log('Database Configuration:', {
-  host: dbConfig.host,
-  port: dbConfig.port,
-  username: dbConfig.username,
-  database: dbConfig.database,
-});
-
-const sequelizeInstance = new Sequelize({
-  dialect: 'postgres',
-  host: dbConfig.host,
-  port: dbConfig.port,
-  username: dbConfig.username,
-  password: dbConfig.password,
-  database: dbConfig.database,
-  logging: console.log, // Enable SQL query logging
-});
+import sequelize from './config/database';
 
 // Test the database connection
 const testConnection = async () => {
